@@ -41,13 +41,21 @@ const contactChecker = async (req, res) => {
     // the oldest one
     let primaryContact = existingContacts[0];
 
-    const needNewSecondary = !existingContacts.some(
-        (c) =>
+    let needNewSecondary = true;
+
+    // email and phone number already exist toh nhi karta
+    for (let i = 0; i < existingContacts.length; i++) {
+        const contact = existingContacts[i];
+        if (
             email &&
-            c.email === email &&
+            contact.email === email &&
             phoneNumber &&
-            c.phoneNumber === phoneNumber
-    );
+            contact.phoneNumber === phoneNumber
+        ) {
+            needNewSecondary = false;
+            break; 
+        }
+    }
 
     if (needNewSecondary) {
         const newSecondary = await prisma.contact.create({
