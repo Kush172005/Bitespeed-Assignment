@@ -44,16 +44,35 @@ const contactChecker = async (req, res) => {
 
         let needNewSecondary = true;
 
-        for (let i = 0; i < existingContacts.length; i++) {
-            const contact = existingContacts[i];
-            if (
-                email &&
-                contact.email === email &&
-                phoneNumber &&
-                contact.phoneNumber === phoneNumber
-            ) {
-                needNewSecondary = false;
-                break;
+        let emailContact = existingContacts.find((c) => c.email === email);
+        let phoneContact = existingContacts.find(
+            (c) => c.phoneNumber === phoneNumber
+        );
+
+        if (
+            emailContact &&
+            phoneContact &&
+            emailContact.id !== phoneContact.id
+        ) {
+            needNewSecondary = false;
+
+            if (phoneContact.createdAt < emailContact.createdAt) {
+                primaryContact = phoneContact;
+            } else {
+                primaryContact = emailContact;
+            }
+        } else {
+            for (let i = 0; i < existingContacts.length; i++) {
+                const contact = existingContacts[i];
+                if (
+                    email &&
+                    contact.email === email &&
+                    phoneNumber &&
+                    contact.phoneNumber === phoneNumber
+                ) {
+                    needNewSecondary = false;
+                    break;
+                }
             }
         }
 
