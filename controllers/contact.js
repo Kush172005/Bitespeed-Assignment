@@ -53,7 +53,7 @@ const contactChecker = async (req, res) => {
             contact.phoneNumber === phoneNumber
         ) {
             needNewSecondary = false;
-            break; 
+            break;
         }
     }
 
